@@ -37,44 +37,8 @@
 
   <body>
     <nav class="navbar navbar-default navbar-pf" role="navigation">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collaps-1">
-          <span class="sr-only">Toggle Navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <!--
-        <a class="navbar-brand" href="/">
-          <img src="img/hawtio_logo.svg" height="16" alt="hawtio">
-        </a>
-        -->
-      </div>
-      <div class="collapse navbar-collapse navbar-collapse-1">
-        <ul class="nav navbar-nav navbar-utility">
-        </ul>
-        <ul class="nav navbar-nav navbar-primary persistent-secondary" hawtio-main-nav>
-          <!--
-          <li class="dropdown context">
-            <a href="" class="dropdown-toggle" data-toggle="dropdown">
-              Perspective
-              <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
-            </ul>
-          </li>
-          -->
-          <!-- TODO -->
-          <li class="active">
-            <a href="">Active</a>
-            <ul class="nav navbar-nav navbar-persistent">
-              <li>
-                <a href="">A link</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
+      <ul class="nav navbar-nav navbar-primary" hawtio-main-nav></ul>
+      <ul class="nav navbar-nav" hawtio-sub-tabs></ul>
     </nav>
 
     <div class="container-fluid" ng-view></div>
