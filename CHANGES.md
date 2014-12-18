@@ -1,5 +1,8 @@
 ## Change Log
 
+#### 0.1.4
+* Add lodash.d.ts to includes.ts
+
 #### 0.1.3
 * Update index.html to reflect nav bar changes
 
