@@ -67,7 +67,7 @@ gulp.task('clean', ['concat'], function() {
 });
 
 gulp.task('connect', function() {
-  plugins.watch(['index.html', config.dist + '/' + config.js], function() {
+  plugins.watch(['libs/**/*.js', 'libs/**/*.css', 'index.html', config.dist + '/' + config.js], function() {
     gulp.start('reload');
   });
   plugins.watch([config.ts, config.templates], function() {
