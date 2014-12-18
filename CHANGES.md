@@ -1,5 +1,8 @@
 ## Change Log
 
+#### 0.1.5
+* Add additional watches so the generated project reloads when a bower dependency is changed
+
 #### 0.1.4
 * Add lodash.d.ts to includes.ts
 
