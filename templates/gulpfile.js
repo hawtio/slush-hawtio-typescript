@@ -66,13 +66,16 @@ gulp.task('clean', ['concat'], function() {
     .pipe(plugins.clean());
 });
 
-gulp.task('connect', function() {
+gulp.task('watch', ['build'], function() {
   plugins.watch(['libs/**/*.js', 'libs/**/*.css', 'index.html', config.dist + '/' + config.js], function() {
     gulp.start('reload');
   });
-  plugins.watch([config.ts, config.templates], function() {
+  plugins.watch(['libs/**/*.d.ts', config.ts, config.templates], function() {
     gulp.start('build');
   });
+});
+
+gulp.task('connect', ['watch'], function() {
   plugins.connect.server({
     root: '.',
     livereload: true,
@@ -88,7 +91,7 @@ gulp.task('reload', function() {
 
 gulp.task('build', ['tsc', 'template', 'concat', 'clean']);
 
-gulp.task('default', ['build', 'connect']);
+gulp.task('default', ['connect']);
 
 
     
