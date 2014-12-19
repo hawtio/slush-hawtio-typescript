@@ -1,5 +1,8 @@
 ## Change Log
 
+#### 0.1.6
+* Break up connect/watch tasks, watch for changes to dependent d.ts files to trigger rebuild
+
 #### 0.1.5
 * Add additional watches so the generated project reloads when a bower dependency is changed
 
