@@ -1,5 +1,8 @@
 ## Change Log
 
+#### 0.1.8
+* Clean up the defs.d.ts file before each compile run
+
 #### 0.1.7
 * Added a main file by default
 * Set up code to be easily exported via a defs.d.ts file
