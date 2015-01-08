@@ -11,7 +11,8 @@
   ],
   "dependencies": {
     "hawtio-core": "~2.0.0",
-    "hawtio-core-navigation": "~2.0.0"
+    "hawtio-core-navigation": "~2.0.0",
+    "hawtio-utilities": "~2.0.0"
   },
   "devDependencies": {
     "bootstrap": "~3.3.1",
