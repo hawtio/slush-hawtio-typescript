@@ -1,5 +1,11 @@
 ## Change Log
 
+#### 0.1.7
+* Added a main file by default
+* Set up code to be easily exported via a defs.d.ts file
+* Adjust the reference paths of any typescript plugins that the project depends on
+* Add hawtio-utilities dependency to generated plugin code
+
 #### 0.1.6
 * Break up connect/watch tasks, watch for changes to dependent d.ts files to trigger rebuild
 
