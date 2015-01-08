@@ -2,7 +2,10 @@ var gulp = require('gulp'),
     wiredep = require('wiredep').stream,
     eventStream = require('event-stream'),
     gulpLoadPlugins = require('gulp-load-plugins'),
-    map = require('vinyl-map');
+    map = require('vinyl-map'),
+    fs = require('fs'),
+    path = require('path'),
+    s = require('underscore.string');
 
 var plugins = gulpLoadPlugins({});
 var pkg = require('./package.json');
@@ -41,6 +44,7 @@ gulp.task('path-adjust', function() {
 });
 
 gulp.task('tsc', function() {
+  var cwd = process.cwd();
   var tsResult = gulp.src(config.ts)
     .pipe(plugins.typescript(config.tsProject))
     .on('error', plugins.notify.onError({
@@ -53,7 +57,15 @@ gulp.task('tsc', function() {
         .pipe(plugins.concat('compiled.js'))
         .pipe(gulp.dest('.')),
       tsResult.dts
-        .pipe(gulp.dest('d.ts')));
+        .pipe(gulp.dest('d.ts')))
+        .pipe(map(function(buf, filename) {
+          if (!s.endsWith(filename, 'd.ts')) {
+            return buf;
+          }
+          var relative = path.relative(cwd, filename);
+          fs.appendFileSync('defs.d.ts', '/// <reference path="' + relative + '"/>\n');
+          return buf;
+        }));
 });
 
 gulp.task('template', ['tsc'], function() {
