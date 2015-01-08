@@ -114,7 +114,7 @@ gulp.task('reload', function() {
     .pipe(plugins.connect.reload());
 });
 
-gulp.task('build', ['tsc', 'template', 'concat', 'clean']);
+gulp.task('build', ['bower', 'path-adjust', 'tsc', 'template', 'concat', 'clean']);
 
 gulp.task('default', ['connect']);
 

@@ -1,6 +1,3 @@
 {
-  "directory" : "libs",
-  "scripts": {
-    "postinstall": "gulp bower path-adjust"
-  }
+  "directory" : "libs"
 }
