@@ -1,7 +1,8 @@
 var gulp = require('gulp'),
     wiredep = require('wiredep').stream,
     eventStream = require('event-stream'),
-    gulpLoadPlugins = require('gulp-load-plugins');
+    gulpLoadPlugins = require('gulp-load-plugins'),
+    map = require('vinyl-map');
 
 var plugins = gulpLoadPlugins({});
 var pkg = require('./package.json');
@@ -25,6 +26,18 @@ gulp.task('bower', function() {
   gulp.src('index.html')
     .pipe(wiredep({}))
     .pipe(gulp.dest('.'));
+});
+
+/** Adjust the reference path of any typescript-built plugin this project depends on */
+gulp.task('path-adjust', function() {
+  gulp.src('libs/**/includes.d.ts')
+    .pipe(map(function(buf, filename) {
+      var textContent = buf.toString();
+      var newTextContent = textContent.replace(/"\.\.\/libs/gm, '"../../../libs');
+      // console.log("Filename: ", filename, " old: ", textContent, " new:", newTextContent);
+      return newTextContent;
+    }))
+    .pipe(gulp.dest('libs'));
 });
 
 gulp.task('tsc', function() {

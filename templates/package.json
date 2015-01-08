@@ -14,6 +14,7 @@
     "gulp-typescript": "^2.3.0",
     "gulp-watch": "^3.0.0",
     "through2": "^0.6.3",
+    "vinyl-map": "^1.0.1",
     "which": "^1.0.8",
     "wiredep": "^2.2.2"
   }
