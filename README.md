@@ -26,11 +26,18 @@ $ cd my-plugin && slush hawtio-typescript
 ```
 
 Once the generator is finished, run gulp to build the example plugin and run it:
+
 ```bash
 $ gulp
 ```
 
 The example will be at http://localhost:2772
+
+## Some details
+
+Typescript files will be compiled to dist/my-plugin.js.  All template files will be concatenated and added to dist/my-plugin.js, they'll be added to $templateCache in a separate angularjs module 'my-plugin-templates'.
+
+Definition files will be compiled into the `d.ts` directory.  The build will also add all of these files into `defs.d.ts`, which then makes it *very easy* to share definitions to other typescript plugins, as other plugins just need to include the top-level defs.d.ts file and they'll import all of the definitions for code in this plugin.
 
 ## Getting To Know Slush
 
