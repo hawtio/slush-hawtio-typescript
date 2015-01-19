@@ -1,5 +1,8 @@
 ## Change Log
 
+#### 0.1.9
+* Fix watch task to avoid looping when detecting file changes
+
 #### 0.1.8
 * Clean up the defs.d.ts file before each compile run
 
