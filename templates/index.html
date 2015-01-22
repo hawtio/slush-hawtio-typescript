@@ -4,6 +4,7 @@
   <head>
     <title><%= appName %></title>
     <base href='/'></base>
+    <meta charset="UTF8">
 
 
     <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.css" />
@@ -41,8 +42,11 @@
       <ul class="nav navbar-nav" hawtio-sub-tabs></ul>
     </nav>
 
-    <div class="container-fluid" ng-view></div>
+    <div id="main" class="container-fluid ng-cloak" ng-controller="HawtioNav.ViewController">
+      <div ng-include src="viewPartial"></div>
+    </div>
 
+    <!-- add any scripts under dist/ here -->
     <script src="dist/<%=appNameSlug%>.js"></script>
 
   </body>
