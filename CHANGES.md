@@ -1,5 +1,8 @@
 ## Change Log
 
+#### 0.1.10
+* Update index.html to use view controller
+
 #### 0.1.9
 * Fix watch task to avoid looping when detecting file changes
 
