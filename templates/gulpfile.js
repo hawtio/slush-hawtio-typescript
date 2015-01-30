@@ -5,7 +5,9 @@ var gulp = require('gulp'),
     map = require('vinyl-map'),
     fs = require('fs'),
     path = require('path'),
-    s = require('underscore.string');
+    uri = require('URIjs'),
+    s = require('underscore.string'),
+    hawtio = require('hawtio-node-backend');
 
 var plugins = gulpLoadPlugins({});
 var pkg = require('./package.json');
@@ -105,18 +107,72 @@ gulp.task('watch', ['build'], function() {
   });
 });
 
+
 gulp.task('connect', ['watch'], function() {
-  plugins.connect.server({
-    root: '.',
-    livereload: true,
+  /*
+   * Example of fetching a URL from the environment, in this case for kubernetes
+  var kube = uri(process.env.KUBERNETES_MASTER || 'http://localhost:8080');
+  console.log("Connecting to Kubernetes on: " + kube);
+  */
+
+  hawtio.setConfig({
     port: 2772,
-    fallback: 'index.html'
+    staticProxies: [
+    /*  
+    // proxy to a service, in this case kubernetes
+    {
+      proto: kube.protocol(),
+      port: kube.port(),
+      hostname: kube.hostname(),
+      path: '/services/kubernetes',
+      targetPath: kube.path()
+    },
+    // proxy to a jolokia instance
+    {
+      proto: kube.protocol(),
+      hostname: kube.hostname(),
+      port: kube.port(),
+      path: '/jolokia',
+      targetPath: '/hawtio/jolokia'
+    }
+    */
+    ],
+    staticAssets: [{
+      path: '/',
+      dir: '.'
+   
+    }],
+    fallback: 'index.html',
+    liveReload: {
+      enabled: true
+    }
+  });
+  /*
+   * Example middleware that returns a 404 for templates
+   * as they're already embedded in the js
+  hawtio.use('/', function(req, res, next) {
+          var path = req.originalUrl;
+          // avoid returning these files, they should get pulled from js
+          if (s.startsWith(path, '/plugins/') && s.endsWith(path, 'html')) {
+            console.log("returning 404 for: ", path);
+            res.statusCode = 404;
+            res.end();
+          } else {
+            console.log("allowing: ", path);
+            next();
+          }
+        });
+        */
+  hawtio.listen(function(server) {
+    var host = server.address().address;
+    var port = server.address().port;
+    console.log("started from gulp file at ", host, ":", port);
   });
 });
 
 gulp.task('reload', function() {
   gulp.src('.')
-    .pipe(plugins.connect.reload());
+    .pipe(hawtio.reload());
 });
 
 gulp.task('build', ['bower', 'path-adjust', 'tsc', 'template', 'concat', 'clean']);
