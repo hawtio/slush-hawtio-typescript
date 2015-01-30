@@ -1,7 +1,7 @@
 {
   "name": "slush-hawtio-typescript",
   "description": "Slush generator for a hawtio plugin",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "author": {
     "name": "Stan Lewis",
     "email": "gashcrumb@gmail.com"
