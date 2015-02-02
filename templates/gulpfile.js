@@ -7,7 +7,8 @@ var gulp = require('gulp'),
     path = require('path'),
     uri = require('URIjs'),
     s = require('underscore.string'),
-    hawtio = require('hawtio-node-backend');
+    hawtio = require('hawtio-node-backend'),
+    tslint = require('gulp-tslint');
 
 var plugins = gulpLoadPlugins({});
 var pkg = require('./package.json');
@@ -75,6 +76,20 @@ gulp.task('tsc', ['clean-defs'], function() {
         }));
 });
 
+gulp.task('tslint', function(){
+  gulp.src(config.ts)
+    .pipe(tslint())
+    .pipe(tslint.report('verbose'));
+});
+
+gulp.task('tslint-watch', function(){
+  gulp.src(config.ts)
+    .pipe(tslint())
+    .pipe(tslint.report('prose', {
+      emitError: false
+    }));
+});
+
 gulp.task('template', ['tsc'], function() {
   return gulp.src(config.templates)
     .pipe(plugins.angularTemplatecache({
@@ -103,7 +118,7 @@ gulp.task('watch', ['build'], function() {
     gulp.start('reload');
   });
   plugins.watch(['libs/**/*.d.ts', config.ts, config.templates], function() {
-    gulp.start(['tsc', 'template', 'concat', 'clean']);
+    gulp.start(['tslint-watch', 'tsc', 'template', 'concat', 'clean']);
   });
 });
 
@@ -175,7 +190,7 @@ gulp.task('reload', function() {
     .pipe(hawtio.reload());
 });
 
-gulp.task('build', ['bower', 'path-adjust', 'tsc', 'template', 'concat', 'clean']);
+gulp.task('build', ['bower', 'path-adjust', 'tslint', 'tsc', 'template', 'concat', 'clean']);
 
 gulp.task('default', ['connect']);
 
