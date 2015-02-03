@@ -6,18 +6,19 @@ module Example {
 
   var tab = undefined;
 
-  _module.config(['$locationProvider', '$routeProvider', 'HawtioNavBuilderProvider', ($locationProvider, $routeProvider:ng.route.IRouteProvider, builder:HawtioMainNav.BuilderFactory) => {
+  _module.config(["$locationProvider", "$routeProvider", "HawtioNavBuilderProvider",
+    ($locationProvider, $routeProvider: ng.route.IRouteProvider, builder: HawtioMainNav.BuilderFactory) => {
     tab = builder.create()
       .id(Example.pluginName)
       .title(() => "Example")
       .href(() => "/example")
-      .subPath("Page 1", "page1", builder.join(Example.templatePath, 'page1.html'))
+      .subPath("Page 1", "page1", builder.join(Example.templatePath, "page1.html"))
       .build();
     builder.configureRouting($routeProvider, tab);
     $locationProvider.html5Mode(true);
   }]);
 
-  _module.run(['HawtioNav', (HawtioNav:HawtioMainNav.Registry) => {
+  _module.run(["HawtioNav", (HawtioNav: HawtioMainNav.Registry) => {
     HawtioNav.add(tab);
     log.debug("loaded");
   }]);
