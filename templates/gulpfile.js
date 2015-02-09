@@ -5,6 +5,7 @@ var gulp = require('gulp'),
     map = require('vinyl-map'),
     fs = require('fs'),
     path = require('path'),
+    size = require('gulp-size'),
     uri = require('URIjs'),
     s = require('underscore.string'),
     hawtio = require('hawtio-node-backend'),
@@ -27,6 +28,14 @@ var config = {
     noExternalResolve: false
   })
 };
+
+var normalSizeOptions = {
+    showFiles: true
+}, gZippedSizeOptions  = {
+    showFiles: true,
+    gzip: true
+};
+
 
 gulp.task('bower', function() {
   gulp.src('index.html')
@@ -103,8 +112,11 @@ gulp.task('template', ['tsc'], function() {
 });
 
 gulp.task('concat', ['template'], function() {
+  var gZipSize = size(gZippedSizeOptions);
   return gulp.src(['compiled.js', 'templates.js'])
     .pipe(plugins.concat(config.js))
+    .pipe(size(normalSizeOptions))
+    .pipe(gZipSize)
     .pipe(gulp.dest(config.dist));
 });
 
