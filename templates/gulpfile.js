@@ -9,7 +9,8 @@ var gulp = require('gulp'),
     uri = require('URIjs'),
     s = require('underscore.string'),
     hawtio = require('hawtio-node-backend'),
-    tslint = require('gulp-tslint');
+    tslint = require('gulp-tslint'),
+    tslintRules = require('./tslint.json');
 
 var plugins = gulpLoadPlugins({});
 var pkg = require('./package.json');
@@ -25,8 +26,12 @@ var config = {
     target: 'ES5',
     module: 'commonjs',
     declarationFiles: true,
-    noExternalResolve: false
-  })
+    noExternalResolve: false,
+    removeComments: true
+  }),
+  tsLintOptions: {
+    rulesDirectory: './tslint-rules/'
+  }
 };
 
 var normalSizeOptions = {
@@ -87,13 +92,13 @@ gulp.task('tsc', ['clean-defs'], function() {
 
 gulp.task('tslint', function(){
   gulp.src(config.ts)
-    .pipe(tslint())
+    .pipe(tslint(config.tsLintOptions))
     .pipe(tslint.report('verbose'));
 });
 
 gulp.task('tslint-watch', function(){
   gulp.src(config.ts)
-    .pipe(tslint())
+    .pipe(tslint(config.tsLintOptions))
     .pipe(tslint.report('prose', {
       emitError: false
     }));
@@ -113,8 +118,10 @@ gulp.task('template', ['tsc'], function() {
 
 gulp.task('concat', ['template'], function() {
   var gZipSize = size(gZippedSizeOptions);
+  var license = tslintRules.rules['license-header'][1];
   return gulp.src(['compiled.js', 'templates.js'])
     .pipe(plugins.concat(config.js))
+    .pipe(plugins.header(license))
     .pipe(size(normalSizeOptions))
     .pipe(gZipSize)
     .pipe(gulp.dest(config.dist));
