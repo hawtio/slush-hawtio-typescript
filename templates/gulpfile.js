@@ -18,10 +18,12 @@ var pkg = require('./package.json');
 var config = {
   main: '.',
   ts: ['plugins/**/*.ts'],
+  less: './less/**/*.less',
   templates: ['plugins/**/*.html'],
   templateModule: pkg.name + '-templates',
   dist: './dist/',
   js: pkg.name + '.js',
+  css: pkg.name + '.css',
   tsProject: plugins.typescript.createProject({
     target: 'ES5',
     module: 'commonjs',
@@ -104,6 +106,15 @@ gulp.task('tslint-watch', function(){
     }));
 });
 
+gulp.task('less', function () {
+  return gulp.src(config.less)
+    .pipe(plugins.less({
+      paths: [ path.join(__dirname, 'less', 'includes') ]
+    }))
+    .pipe(plugins.concat(config.css))
+    .pipe(gulp.dest('./dist'));
+});
+
 gulp.task('template', ['tsc'], function() {
   return gulp.src(config.templates)
     .pipe(plugins.angularTemplatecache({
@@ -139,6 +150,9 @@ gulp.task('watch', ['build'], function() {
   plugins.watch(['libs/**/*.d.ts', config.ts, config.templates], function() {
     gulp.start(['tslint-watch', 'tsc', 'template', 'concat', 'clean']);
   });
+  plugins.watch(config.less, function(){
+    gulp.start('less', 'reload');
+  })
 });
 
 
@@ -209,7 +223,7 @@ gulp.task('reload', function() {
     .pipe(hawtio.reload());
 });
 
-gulp.task('build', ['bower', 'path-adjust', 'tslint', 'tsc', 'template', 'concat', 'clean']);
+gulp.task('build', ['bower', 'path-adjust', 'tslint', 'tsc', 'less', 'template', 'concat', 'clean']);
 
 gulp.task('default', ['connect']);
 
