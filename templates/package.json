@@ -11,6 +11,7 @@
     "gulp-concat": "^2.4.2",
     "gulp-header": "1.2.2",
     "hawtio-node-backend": "^2.0.5",
+    "gulp-less": "3.0.1",
     "gulp-load-plugins": "^0.8.0",
     "gulp-notify": "^2.1.0",
     "gulp-tslint": "^1.4.2",
