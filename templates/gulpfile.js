@@ -70,6 +70,7 @@ gulp.task('clean-defs', function() {
 gulp.task('tsc', ['clean-defs'], function() {
   var cwd = process.cwd();
   var tsResult = gulp.src(config.ts)
+    .pipe(plugins.sourcemaps.init())
     .pipe(plugins.typescript(config.tsProject))
     .on('error', plugins.notify.onError({
       message: '#{ error.message }',
@@ -79,6 +80,7 @@ gulp.task('tsc', ['clean-defs'], function() {
     return eventStream.merge(
       tsResult.js
         .pipe(plugins.concat('compiled.js'))
+        .pipe(plugins.sourcemaps.write())
         .pipe(gulp.dest('.')),
       tsResult.dts
         .pipe(gulp.dest('d.ts')))
@@ -166,7 +168,7 @@ gulp.task('connect', ['watch'], function() {
   hawtio.setConfig({
     port: 2772,
     staticProxies: [
-    /*  
+    /*
     // proxy to a service, in this case kubernetes
     {
       proto: kube.protocol(),
@@ -188,7 +190,7 @@ gulp.task('connect', ['watch'], function() {
     staticAssets: [{
       path: '/',
       dir: '.'
-   
+
     }],
     fallback: 'index.html',
     liveReload: {
@@ -228,4 +230,4 @@ gulp.task('build', ['bower', 'path-adjust', 'tslint', 'tsc', 'less', 'template',
 gulp.task('default', ['connect']);
 
 
-    
+
