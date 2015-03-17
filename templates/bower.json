@@ -1,6 +1,6 @@
 {
   "name": "<%= appNameSlug %>",
-  "version": "0.1.0",
+  "version": "<%= appVersion %>",
   "keywords": [
     "hawtio"
   ],
@@ -9,6 +9,7 @@
     "dist/<%= appNameSlug %>.css"
   ],
   "ignore": [
+    "dist/<%= appNameSlug %>-test.js",
     "**/.*",
     "node_modules",
     "libs",

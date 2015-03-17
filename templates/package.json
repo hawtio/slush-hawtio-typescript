@@ -1,6 +1,6 @@
 {
   "name": "<%=appNameSlug%>",
-  "version": "0.1.0",
+  "version": "<%= appVersion %>",
   "devDependencies": {
     "bower": "^1.3.12",
     "URIjs": "^1.14.1",
