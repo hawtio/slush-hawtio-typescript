@@ -9,7 +9,8 @@ var gulp = require('gulp'),
     s = require('underscore.string'),
     hawtio = require('hawtio-node-backend'),
     tslint = require('gulp-tslint'),
-    tslintRules = require('./tslint.json');
+    tslintRules = require('./tslint.json'),
+    del = require('del');
 
 var plugins = gulpLoadPlugins({});
 var pkg = require('./package.json');
@@ -67,8 +68,7 @@ gulp.task('path-adjust', function() {
 });
 
 gulp.task('clean-defs', function() {
-  return gulp.src('defs.d.ts', { read: false })
-    .pipe(plugins.clean());
+  return del('defs.d.ts');
 });
 
 gulp.task('example-tsc', ['tsc'], function() {
@@ -103,8 +103,7 @@ gulp.task('example-concat', ['example-template'], function() {
 });
 
 gulp.task('example-clean', ['example-concat'], function() {
-  return gulp.src(['test-templates.js', 'test-compiled.js'], { read: false })
-    .pipe(plugins.clean());
+  return del(['test-templates.js', 'test-compiled.js']);
 });
 
 gulp.task('tsc', ['clean-defs'], function() {
@@ -180,8 +179,7 @@ gulp.task('concat', ['template'], function() {
 });
 
 gulp.task('clean', ['concat'], function() {
-  return gulp.src(['templates.js', 'compiled.js'], { read: false })
-    .pipe(plugins.clean());
+  return del(['templates.js', 'compiled.js']);
 });
 
 gulp.task('watch', ['build', 'build-example'], function() {
