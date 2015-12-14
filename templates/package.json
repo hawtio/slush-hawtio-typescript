@@ -3,7 +3,7 @@
   "version": "<%= appVersion %>",
   "devDependencies": {
     "bower": "^1.3.12",
-    "URIjs": "^1.14.1",
+    "urijs": "^1.17.0",
     "event-stream": "^3.1.7",
     "gulp": "^3.8.10",
     "gulp-angular-templatecache": "^1.5.0",
