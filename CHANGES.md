@@ -1,6 +1,8 @@
 ## Change Log
 
 #### Latest
+
+#### 0.1.17
 * Add --out flag to specify build output directory
 * Exit build with an error when there's a compile error
 * Update error/notification messages
