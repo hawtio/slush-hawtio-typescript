@@ -78,8 +78,8 @@ gulp.task('default', function (done) {
         file.basename = '.' + file.basename.slice(1);
       }
     }))
-    .pipe(conflict('./'))
-    .pipe(gulp.dest('./'))
+    .pipe(conflict('.'))
+    .pipe(gulp.dest('.'))
     .pipe(install())
     .on('end', function () {
       done();

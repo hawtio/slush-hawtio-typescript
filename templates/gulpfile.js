@@ -10,6 +10,8 @@ var gulp = require('gulp'),
     hawtio = require('hawtio-node-backend'),
     tslint = require('gulp-tslint'),
     tslintRules = require('./tslint.json'),
+    urljoin = require('url-join'),
+    argv = require('yargs').argv,
     del = require('del');
 
 var plugins = gulpLoadPlugins({});
@@ -19,12 +21,12 @@ var config = {
   main: '.',
   ts: ['plugins/**/*.ts'],
   testTs: ['test-plugins/**/*.ts'],
-  less: './less/**/*.less',
+  less: ['plugins/**/*.less'],
   templates: ['plugins/**/*.html'],
   testTemplates: ['test-plugins/**/*.html'],
   templateModule: pkg.name + '-templates',
   testTemplateModule: pkg.name + '-test-templates',
-  dist: './dist/',
+  dist: argv.out || './dist/',
   js: pkg.name + '.js',
   testJs: pkg.name + '-test.js',
   css: pkg.name + '.css',
@@ -33,7 +35,6 @@ var config = {
     module: 'commonjs',
     declarationFiles: true,
     noExternalResolve: false,
-    removeComments: true
   }),
   testTsProject: plugins.typescript.createProject({
     target: 'ES5',
@@ -52,7 +53,6 @@ var normalSizeOptions = {
     showFiles: true,
     gzip: true
 };
-
 
 gulp.task('bower', function() {
   return gulp.src('index.html')
@@ -75,7 +75,8 @@ gulp.task('example-tsc', ['tsc'], function() {
   var tsResult = gulp.src(config.testTs)
     .pipe(plugins.typescript(config.testTsProject))
     .on('error', plugins.notify.onError({
-      message: '#{ error.message }',
+      onLast: true,
+      message: '\\<%= error.message %\\>',
       title: 'Typescript compilation error - test'
     }));
 
@@ -112,9 +113,17 @@ gulp.task('tsc', ['clean-defs'], function() {
     .pipe(plugins.sourcemaps.init())
     .pipe(plugins.typescript(config.tsProject))
     .on('error', plugins.notify.onError({
-      message: '#{ error.message }',
+      onLast: true,
+      message: '\\<%= error.message %\\>',
       title: 'Typescript compilation error'
-    }));
+    }))
+    .on('error', function(error) {
+      argv._.forEach(function(arg) {
+        if (arg === 'build') {
+          throw "Compilation error, halting build";
+        }
+      });
+    });
 
     return eventStream.merge(
       tsResult.js
@@ -135,7 +144,9 @@ gulp.task('tsc', ['clean-defs'], function() {
 gulp.task('tslint', function(){
   gulp.src(config.ts)
     .pipe(tslint(config.tsLintOptions))
-    .pipe(tslint.report('verbose'));
+    .pipe(tslint.report('verbose', {
+      emitError: false
+    }));
 });
 
 gulp.task('tslint-watch', function(){
@@ -151,8 +162,13 @@ gulp.task('less', function () {
     .pipe(plugins.less({
       paths: [ path.join(__dirname, 'less', 'includes') ]
     }))
+    .on('error', plugins.notify.onError({
+      onLast: true,
+      message: '\\<%= error.message %\\>',
+      title: 'less file compilation error'
+    }))
     .pipe(plugins.concat(config.css))
-    .pipe(gulp.dest('./dist'));
+    .pipe(gulp.dest(config.dist));
 });
 
 gulp.task('template', ['tsc'], function() {
@@ -169,12 +185,17 @@ gulp.task('template', ['tsc'], function() {
 
 gulp.task('concat', ['template'], function() {
   var gZipSize = size(gZippedSizeOptions);
+  /*
   var license = tslintRules.rules['license-header'][1];
+  */
   return gulp.src(['compiled.js', 'templates.js'])
     .pipe(plugins.concat(config.js))
-    .pipe(plugins.header(license))
-    .pipe(size(normalSizeOptions))
-    .pipe(gZipSize)
+    .pipe(plugins.ngAnnotate())
+    .on('error', plugins.notify.onError({
+      onLast: true,
+      message: '\\<%= error.message %\\>',
+      title: 'ng-annotate error'
+    }))
     .pipe(gulp.dest(config.dist));
 });
 
@@ -183,7 +204,7 @@ gulp.task('clean', ['concat'], function() {
 });
 
 gulp.task('watch', ['build', 'build-example'], function() {
-  plugins.watch(['libs/**/*.js', 'libs/**/*.css', 'index.html', config.dist + '/' + config.js], function() {
+  plugins.watch(['libs/**/*.js', 'libs/**/*.css', 'index.html', config.dist + '/*'], function() {
     gulp.start('reload');
   });
   plugins.watch(['libs/**/*.d.ts', config.ts, config.templates], function() {

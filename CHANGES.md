@@ -1,5 +1,10 @@
 ## Change Log
 
+#### Latest
+* Add --out flag to specify build output directory
+* Exit build with an error when there's a compile error
+* Update error/notification messages
+
 #### 0.1.10
 * Update index.html to use view controller
 
